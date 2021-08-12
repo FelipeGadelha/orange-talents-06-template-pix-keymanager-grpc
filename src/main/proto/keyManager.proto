@@ -8,7 +8,6 @@ option objc_class_prefix = "HLW";
 package br.com.zup.felipe.gadelha;
 
 import "google/protobuf/timestamp.proto";
-import "google/rpc/Code.proto";
 
 service KeyManagerService {
   rpc register (PixRq) returns (PixRs) {}
@@ -32,22 +31,7 @@ message ExceptionDetails {
   string title = 1;
   int32 code = 2;
   string message = 3;
-  google.rpc.Code status = 4;
   google.protobuf.Timestamp timestamp = 5;
-}
-
-message ValidationExceptionDetails {
-  string title = 1;
-  int32 code = 2;
-  string message = 3;
-  google.rpc.Code status = 4;
-  google.protobuf.Timestamp timestamp = 5;
-
-  message Errors {
-      string field = 1;
-      repeated string detail = 2;
-  }
-  repeated Errors errors = 6;
 }
 
 message PixRq {

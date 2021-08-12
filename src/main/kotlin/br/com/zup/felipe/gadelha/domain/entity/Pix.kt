@@ -1,4 +1,4 @@
-package br.com.zup.felipe.gadelha.entity
+package br.com.zup.felipe.gadelha.domain.entity
 
 import br.com.zup.felipe.gadelha.AccountType
 import br.com.zup.felipe.gadelha.PixKeyType

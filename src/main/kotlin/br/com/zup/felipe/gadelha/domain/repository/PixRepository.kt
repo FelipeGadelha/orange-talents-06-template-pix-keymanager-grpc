@@ -1,6 +1,6 @@
-package br.com.zup.felipe.gadelha.repository
+package br.com.zup.felipe.gadelha.domain.repository
 
-import br.com.zup.felipe.gadelha.entity.Pix
+import br.com.zup.felipe.gadelha.domain.entity.Pix
 import io.micronaut.data.annotation.Repository
 import io.micronaut.data.jpa.repository.JpaRepository
 import java.util.*

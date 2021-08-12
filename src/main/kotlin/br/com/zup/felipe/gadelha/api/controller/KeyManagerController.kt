@@ -1,13 +1,14 @@
-package br.com.zup.felipe.gadelha.controller
+package br.com.zup.felipe.gadelha.api.controller
 
-import br.com.zup.felipe.gadelha.*
-import br.com.zup.felipe.gadelha.extensions.convertPix
-import br.com.zup.felipe.gadelha.extensions.validate
-import br.com.zup.felipe.gadelha.repository.PixRepository
+import br.com.zup.felipe.gadelha.KeyManagerServiceGrpc
+import br.com.zup.felipe.gadelha.PixRq
+import br.com.zup.felipe.gadelha.PixRs
+import br.com.zup.felipe.gadelha.domain.extensions.convertPix
+import br.com.zup.felipe.gadelha.domain.extensions.validate
+import br.com.zup.felipe.gadelha.domain.repository.PixRepository
+import io.grpc.protobuf.StatusProto
 import io.grpc.stub.StreamObserver
-import io.micronaut.http.annotation.Controller
 import org.slf4j.LoggerFactory
-import java.util.UUID.randomUUID
 import javax.inject.Singleton
 
 @Singleton
@@ -19,7 +20,7 @@ class KeyManagerController(private val repository: PixRepository): KeyManagerSer
         request.validate().fold(
             { statusError ->
                 log.error("${statusError.message}")
-                responseObserver.onError(statusError)
+                responseObserver.onError(StatusProto.toStatusRuntimeException(statusError))
             },
             { pixRq ->
                 log.info("registrando chave pix: ${pixRq.clientId}, ${pixRq.value}, ${pixRq.accountType}, ${pixRq.keyType}")
@@ -30,6 +31,5 @@ class KeyManagerController(private val repository: PixRepository): KeyManagerSer
                 )
             }
         )
-        responseObserver.onCompleted()
     }
 }
