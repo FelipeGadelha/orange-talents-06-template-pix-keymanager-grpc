@@ -23,6 +23,7 @@ micronaut {
     }
 }
 
+def arrowVersion = "0.13.2"
 dependencies {
     kapt("io.micronaut.data:micronaut-data-processor")
     implementation("io.micronaut:micronaut-runtime")
@@ -36,12 +37,13 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("org.testcontainers:postgresql")
     testImplementation("org.testcontainers:testcontainers")
     implementation("io.micronaut:micronaut-validation")
+    implementation("io.arrow-kt:arrow-core:${arrowVersion}")
 
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    testImplementation("com.h2database:h2")
     testImplementation("io.micronaut:micronaut-http-client")
 
 }
