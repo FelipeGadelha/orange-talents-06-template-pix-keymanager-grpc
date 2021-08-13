@@ -23,6 +23,38 @@ fun invalidArgumentHandler(message: String?): com.google.rpc.Status {
             .build()))
         .build()
 }
+fun alreadyExistsHandler(message: String?): com.google.rpc.Status {
+    val instant = LocalDateTime.now().atZone(ZoneId.of("UTC")).toInstant()
+    return com.google.rpc.Status.newBuilder()
+        .setCode(Code.ALREADY_EXISTS.number)
+        .setMessage(message)
+        .addDetails(Any.pack(ExceptionDetails.newBuilder()
+            .setTitle(Code.ALREADY_EXISTS.name)
+            .setCode(Code.ALREADY_EXISTS.number)
+            .setMessage(message)
+            .setTimestamp(Timestamp.newBuilder()
+                .setSeconds(instant.epochSecond)
+                .setNanos(instant.nano)
+                .build())
+            .build()))
+        .build()
+}
+fun notFoundHandler(message: String?): com.google.rpc.Status {
+    val instant = LocalDateTime.now().atZone(ZoneId.of("UTC")).toInstant()
+    return com.google.rpc.Status.newBuilder()
+        .setCode(Code.NOT_FOUND.number)
+        .setMessage(message)
+        .addDetails(Any.pack(ExceptionDetails.newBuilder()
+            .setTitle(Code.NOT_FOUND.name)
+            .setCode(Code.NOT_FOUND.number)
+            .setMessage(message)
+            .setTimestamp(Timestamp.newBuilder()
+                .setSeconds(instant.epochSecond)
+                .setNanos(instant.nano)
+                .build())
+            .build()))
+        .build()
+}
 fun failedPreconditionHandler(message: String?): com.google.rpc.Status {
     val instant = LocalDateTime.now().atZone(ZoneId.of("UTC")).toInstant()
     return com.google.rpc.Status.newBuilder()

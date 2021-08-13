@@ -14,7 +14,8 @@ fun keyValidator(keyType: PixKeyType, value: String): Boolean =
         PixKeyType.CPF -> !RegexValidator.CPF.validate(value)
         PixKeyType.EMAIL -> !RegexValidator.EMAIL.validate(value)
         PixKeyType.CEL_PHONE -> !RegexValidator.CELL_PHONE.validate(value)
-        else -> true
+        PixKeyType.RANDOM_KEY -> value.isNotBlank()
+        else -> false
     }
 
 

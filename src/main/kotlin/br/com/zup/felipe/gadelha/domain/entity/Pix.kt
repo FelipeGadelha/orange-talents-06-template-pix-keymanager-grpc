@@ -11,9 +11,6 @@ data class Pix(
     @Column(nullable = false, length = 36)
     val clientId: UUID,
 
-    @Column(nullable = false, length = 77)
-    val value: String,
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     val keyType: PixKeyType,
@@ -22,8 +19,17 @@ data class Pix(
     @Enumerated(EnumType.STRING)
     val accountType: AccountType
 ) {
+
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     var id: UUID? = null
+
+    @Column(nullable = false, length = 77, unique = true)
+    var value: String = UUID.randomUUID().toString()
+
+    constructor(clientId: UUID, value: String, keyType: PixKeyType, accountType: AccountType)
+            : this(clientId, keyType, accountType) {
+                if (value.isNotBlank()) this.value = value
+            }
 }
