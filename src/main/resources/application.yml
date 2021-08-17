@@ -8,9 +8,13 @@ datasources:
     username: postgres
     password: password
     dialect: POSTGRES
-#jpa.default.properties.hibernate.hbm2ddl.auto: update
-jpa.default.properties.hibernate.hbm2ddl.auto: create-drop
+jpa.default.properties.hibernate.hbm2ddl.auto: update
+#jpa.default.properties.hibernate.hbm2ddl.auto: create-drop
 
 logger:
   levels:
     io.micronaut.transaction: DEBUG
+
+application.client:
+  itau: http://localhost:9091
+  bcb: http://localhost:8082

@@ -9,8 +9,12 @@ package br.com.zup.felipe.gadelha;
 
 import "google/protobuf/timestamp.proto";
 
-service KeyManagerService {
+service KeyManagerRegisterService {
   rpc register (PixRq) returns (PixRs) {}
+}
+
+service KeyManagerDeleteService {
+  rpc delete (DeletePixRq) returns (DeletePixRs) {}
 }
 
 enum PixKeyType {
@@ -44,3 +48,10 @@ message PixRq {
 message PixRs {
   string pixId = 1;
 }
+
+message DeletePixRq {
+  string pixId = 1;
+  string clientId = 2;
+}
+
+message DeletePixRs { }

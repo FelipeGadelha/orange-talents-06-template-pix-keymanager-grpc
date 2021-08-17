@@ -9,7 +9,7 @@ class DefaultExceptionHandler: ExceptionHandler<Exception> {
             is IllegalStateException -> failedPreconditionHandler(e.message)
             else -> defaultHandler(e.message)
         }
-        return StatusWithDetails(status!!)
+        return StatusWithDetails(status)
     }
 
     override fun supports(e: Exception): Boolean {

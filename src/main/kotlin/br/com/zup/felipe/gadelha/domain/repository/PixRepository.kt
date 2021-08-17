@@ -9,4 +9,5 @@ import java.util.*
 @Repository
 interface PixRepository: JpaRepository<Pix, UUID> {
     fun existsByValueAndKeyType(value: String, keyType: PixKeyType): Boolean
+    fun existsByIdAndClientId(id: UUID, clientId: UUID): Boolean
 }
