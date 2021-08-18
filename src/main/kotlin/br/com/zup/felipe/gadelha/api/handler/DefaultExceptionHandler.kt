@@ -1,12 +1,14 @@
 package br.com.zup.felipe.gadelha.api.handler
 
 import br.com.zup.felipe.gadelha.api.handler.ExceptionHandler.StatusWithDetails
+import javax.validation.ConstraintViolationException
 
 class DefaultExceptionHandler: ExceptionHandler<Exception> {
     override fun handle(e: Exception): StatusWithDetails {
         val status = when (e) {
-            is IllegalArgumentException -> invalidArgumentHandler(e.message)
+            is ConstraintViolationException -> invalidArgumentHandler(e)
             is IllegalStateException -> failedPreconditionHandler(e.message)
+            is NumberFormatException -> failedPreconditionHandler(e.message)
             else -> defaultHandler(e.message)
         }
         return StatusWithDetails(status)

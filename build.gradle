@@ -51,6 +51,7 @@ dependencies {
 
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.micronaut.xml:micronaut-jackson-xml")
+    implementation("org.hibernate:hibernate-validator:6.1.6.Final")
     // https://mvnrepository.com/artifact/com.github.javafaker/javafaker
     testImplementation("com.github.javafaker:javafaker:1.0.2")
 

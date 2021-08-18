@@ -2,6 +2,8 @@ package br.com.zup.felipe.gadelha.api.controller
 
 import br.com.zup.felipe.gadelha.*
 import br.com.zup.felipe.gadelha.domain.entity.Pix
+import br.com.zup.felipe.gadelha.domain.entity.TypeAccount
+import br.com.zup.felipe.gadelha.domain.entity.TypeKey
 import br.com.zup.felipe.gadelha.domain.repository.PixRepository
 import br.com.zup.felipe.gadelha.infra.client.ItauClient
 import com.github.javafaker.Faker
@@ -42,8 +44,8 @@ internal class KeyManagerDeleteControllerTest(
         pix = repository.save(Pix(
             clientId = UUID.fromString("c56dfef4-7901-44fb-84e2-a2cefb157890"),
             value = faker.internet().emailAddress(),
-            keyType = PixKeyType.EMAIL,
-            accountType = AccountType.CURRENT
+            keyType = TypeKey.EMAIL.toString(),
+            accountType = TypeAccount.CURRENT.toString()
             )
         )
     }
