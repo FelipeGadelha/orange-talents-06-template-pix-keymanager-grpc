@@ -1,24 +1,23 @@
 package br.com.zup.felipe.gadelha.domain.entity
 
+import br.com.zup.felipe.gadelha.api.validation.PixValue
 import org.hibernate.annotations.GenericGenerator
 import java.util.*
 import javax.persistence.*
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
-import javax.validation.constraints.Size
 
 @Entity
+@PixValue
 data class Pix(
-    @field:NotNull
     @Column(nullable = false, length = 36)
     val clientId: UUID,
 
-    @field:NotNull
+    @Column(nullable = false, length = 77, unique = true)
+    val value: String = "",
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     val typeKey: TypeKey,
 
-    @field:NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     val typeAccount: TypeAccount
@@ -29,14 +28,8 @@ data class Pix(
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     var id: UUID? = null
 
-    @field:NotNull
-    @field:Size(max = 77)
-    @Column(nullable = false, length = 77, unique = true)
-    var value: String = UUID.randomUUID().toString()
-
-    constructor(clientId: UUID, value: String, typeKey: String, accountType: String)
-            : this(clientId, TypeKey.valueOf(typeKey), TypeAccount.valueOf(accountType)) {
-                if (value.isNotBlank()) this.value = value
+    constructor(clientId: UUID, value: String, typeKey: String, typeAccount: String)
+            : this(clientId, value, TypeKey.valueOf(typeKey), TypeAccount.valueOf(typeAccount)) {
             }
 }
 

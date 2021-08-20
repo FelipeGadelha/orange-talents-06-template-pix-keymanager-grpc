@@ -7,6 +7,7 @@ option java_outer_classname = "KeyManager";
 package br.com.zup.felipe.gadelha;
 
 import "google/protobuf/timestamp.proto";
+//import "validate/validate.proto";
 
 service KeyManagerRegisterService {
   rpc register (PixRq) returns (PixRs) {}

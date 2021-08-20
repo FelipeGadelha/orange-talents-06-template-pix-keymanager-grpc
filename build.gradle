@@ -14,6 +14,9 @@ group = "br.com.zup.felipe.gadelha"
 repositories {
     mavenCentral()
 }
+test {
+    useJUnitPlatform()
+}
 
 micronaut {
     testRuntime("junit5")

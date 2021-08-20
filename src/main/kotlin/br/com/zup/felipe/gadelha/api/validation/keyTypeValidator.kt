@@ -1,5 +1,8 @@
 package br.com.zup.felipe.gadelha.api.validation
 
+import br.com.zup.felipe.gadelha.AccountType
+import br.com.zup.felipe.gadelha.PixKeyType
+import br.com.zup.felipe.gadelha.domain.entity.TypeKey
 import io.micronaut.core.annotation.AnnotationValue
 import io.micronaut.validation.validator.constraints.ConstraintValidator
 import io.micronaut.validation.validator.constraints.ConstraintValidatorContext
@@ -9,27 +12,20 @@ import javax.validation.Payload
 import kotlin.reflect.KClass
 
 @MustBeDocumented
-@Target(AnnotationTarget.FIELD, AnnotationTarget.CONSTRUCTOR)
+@Target(AnnotationTarget.FIELD)
 @Retention(AnnotationRetention.RUNTIME)
-@Constraint(validatedBy = [IsUUIDValidator::class])
-annotation class IsUUID(
-    val message: String = "Esta Entidade já existe no banco de dados",
-    val fieldName: String,
-    val domainClass: KClass<*>,
+@Constraint(validatedBy = [KeyTypeValidator::class])
+annotation class ValidKeyType(
+    val message: String = "O tipo de chave é irreconhecivel",
     val groups: Array<KClass<Any>> = [],
     val payload: Array<KClass<Payload>> = []
 )
 
 @Singleton
-open class IsUUIDValidator: ConstraintValidator<IsUUID, Any> {
-
+open class KeyTypeValidator: ConstraintValidator<ValidKeyType, PixKeyType> {
     override fun isValid(
-        value: Any?,
-        annotationMetadata: AnnotationValue<IsUUID>,
+        value: PixKeyType?,
+        annotationMetadata: AnnotationValue<ValidKeyType>,
         context: ConstraintValidatorContext
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-
+    ): Boolean = value != PixKeyType.UNRECOGNIZABLE
 }

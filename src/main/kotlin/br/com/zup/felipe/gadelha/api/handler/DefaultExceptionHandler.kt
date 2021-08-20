@@ -7,8 +7,8 @@ class DefaultExceptionHandler: ExceptionHandler<Exception> {
     override fun handle(e: Exception): StatusWithDetails {
         val status = when (e) {
             is ConstraintViolationException -> invalidArgumentHandler(e)
-            is IllegalStateException -> failedPreconditionHandler(e.message)
-            is NumberFormatException -> failedPreconditionHandler(e.message)
+            is IllegalStateException -> alreadyExistsHandler(e.message)
+            is IllegalArgumentException -> failedPreconditionHandler(e.message)
             else -> defaultHandler(e.message)
         }
         return StatusWithDetails(status)

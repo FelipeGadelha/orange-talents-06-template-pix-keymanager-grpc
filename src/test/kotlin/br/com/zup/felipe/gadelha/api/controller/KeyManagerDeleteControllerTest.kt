@@ -1,5 +1,6 @@
 package br.com.zup.felipe.gadelha.api.controller
 
+import arrow.core.valid
 import br.com.zup.felipe.gadelha.*
 import br.com.zup.felipe.gadelha.domain.entity.Pix
 import br.com.zup.felipe.gadelha.domain.entity.TypeAccount
@@ -37,15 +38,14 @@ internal class KeyManagerDeleteControllerTest(
 
     private lateinit var pix: Pix
 
-
     @BeforeEach
     internal fun setup() {
         repository.deleteAll()
         pix = repository.save(Pix(
-            clientId = UUID.fromString("c56dfef4-7901-44fb-84e2-a2cefb157890"),
-            value = faker.internet().emailAddress(),
-            keyType = TypeKey.EMAIL.toString(),
-            accountType = TypeAccount.CURRENT.toString()
+                clientId = UUID.fromString("c56dfef4-7901-44fb-84e2-a2cefb157890"),
+                value = faker.internet().emailAddress().toString(),
+                typeKey = TypeKey.EMAIL.toString(),
+                typeAccount = TypeAccount.CURRENT.toString()
             )
         )
     }
@@ -72,7 +72,7 @@ internal class KeyManagerDeleteControllerTest(
         }
         with(exception) {
             assertEquals(Status.PERMISSION_DENIED.code, status.code)
-            assertEquals("Chave Pix não encontrado ou não pertence ao cliente", status.description)
+            assertEquals("INVALID_ARGUMENT: Dados inválidos", status.description)
             assertTrue(repository.findAll().isNotEmpty())
         }
     }
@@ -86,7 +86,7 @@ internal class KeyManagerDeleteControllerTest(
         }
         with(exception) {
             assertEquals(Status.INVALID_ARGUMENT.code, status.code)
-            assertEquals("O clientId não pode ser nulo", status.description)
+            assertEquals("INVALID_ARGUMENT: Dados inválidos", status.description)
             assertTrue(repository.findAll().isNotEmpty())
         }
     }
@@ -100,7 +100,7 @@ internal class KeyManagerDeleteControllerTest(
         }
         with(exception) {
             assertEquals(Status.INVALID_ARGUMENT.code, status.code)
-            assertEquals("O pixId não pode ser nulo", status.description)
+            assertEquals("INVALID_ARGUMENT: Dados inválidos", status.description)
             assertTrue(repository.findAll().isNotEmpty())
         }
     }
