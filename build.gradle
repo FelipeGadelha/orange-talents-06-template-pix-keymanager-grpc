@@ -11,6 +11,9 @@ plugins {
 version = "0.1"
 group = "br.com.zup.felipe.gadelha"
 
+allOpen {
+    annotation("javax.inject.Singleton")
+}
 repositories {
     mavenCentral()
 }

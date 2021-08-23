@@ -6,16 +6,23 @@ data class AccountItauRs(
     @JsonProperty("tipo") val type: String,
     @JsonProperty("agencia") val agency: String,
     @JsonProperty("numero") val number: String,
-    @JsonProperty("instituicao") val institution: InstitutionItau,
-    @JsonProperty("titular") val holder: HolderItau,
+    @JsonProperty("instituicao") val institution: InstitutionItauRs,
+    @JsonProperty("titular") val holder: HolderItauRs,
 )
 
-data class InstitutionItau(
+data class InstitutionItauRs(
     @JsonProperty("nome") val name: String,
     val ispb: String
 )
-data class HolderItau(
+data class HolderItauRs(
     val id: String,
     @JsonProperty("nome") val name: String,
     val cpf: String
+)
+
+data class ClientItauRs(
+    val id: String,
+    val cpf: String,
+    @JsonProperty("nome") val name: String,
+    @JsonProperty("instituicao") val institution: InstitutionItauRs,
 )

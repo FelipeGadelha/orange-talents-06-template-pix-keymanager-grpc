@@ -17,6 +17,10 @@ service KeyManagerDeleteService {
   rpc delete (DeletePixRq) returns (DeletePixRs) {}
 }
 
+//service KeyManagerDeleteService {
+//  rpc delete (DeletePixRq) returns (DeletePixRs) {}
+//}
+
 enum PixKeyType {
   UNRECOGNIZABLE = 0;
   CPF = 1;

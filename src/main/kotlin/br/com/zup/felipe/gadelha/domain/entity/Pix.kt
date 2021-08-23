@@ -12,7 +12,7 @@ data class Pix(
     val clientId: UUID,
 
     @Column(nullable = false, length = 77, unique = true)
-    val value: String = "",
+    val value: String,
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -20,7 +20,10 @@ data class Pix(
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val typeAccount: TypeAccount
+    val typeAccount: TypeAccount,
+
+    @Column(nullable = false)
+    val participant: String?
 ) {
 
     @Id
@@ -28,9 +31,9 @@ data class Pix(
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     var id: UUID? = null
 
+
     constructor(clientId: UUID, value: String, typeKey: String, typeAccount: String)
-            : this(clientId, value, TypeKey.valueOf(typeKey), TypeAccount.valueOf(typeAccount)) {
-            }
+            : this(clientId, value, TypeKey.valueOf(typeKey), TypeAccount.valueOf(typeAccount), null)
 }
 
 enum class TypeAccount(val itau: String) {

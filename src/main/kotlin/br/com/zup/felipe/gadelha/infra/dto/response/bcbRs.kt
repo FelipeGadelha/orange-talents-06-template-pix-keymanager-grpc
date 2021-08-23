@@ -5,3 +5,9 @@ data class BCBCreatePixKeyRs(
     val key: String,
     val createdAt: String
 )
+
+data class BCBDeletePixKeyRs(
+    val key: String,
+    val participant: String,
+    val deletedAt: String
+)
