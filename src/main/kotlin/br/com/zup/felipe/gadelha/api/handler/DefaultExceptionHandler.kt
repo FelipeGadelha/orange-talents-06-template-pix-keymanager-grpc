@@ -2,6 +2,7 @@ package br.com.zup.felipe.gadelha.api.handler
 
 import br.com.zup.felipe.gadelha.api.handler.ExceptionHandler.StatusWithDetails
 import br.com.zup.felipe.gadelha.domain.exception.AlreadyExistsException
+import br.com.zup.felipe.gadelha.domain.exception.EntityNotFountException
 import br.com.zup.felipe.gadelha.domain.exception.OperationNotAllowedException
 import javax.validation.ConstraintViolationException
 
@@ -13,6 +14,7 @@ class DefaultExceptionHandler: ExceptionHandler<Exception> {
             is IllegalArgumentException -> failedPreconditionHandler(e.message)
             is AlreadyExistsException -> alreadyExistsHandler(e.message)
             is OperationNotAllowedException -> permissionDeniedHandler(e.message)
+            is EntityNotFountException -> notFoundHandler(e.message)
             else -> defaultHandler(e.message)
         }
         return StatusWithDetails(status)

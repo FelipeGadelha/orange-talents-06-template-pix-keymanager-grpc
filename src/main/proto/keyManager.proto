@@ -17,9 +17,9 @@ service KeyManagerDeleteService {
   rpc delete (DeletePixRq) returns (DeletePixRs) {}
 }
 
-//service KeyManagerDeleteService {
-//  rpc delete (DeletePixRq) returns (DeletePixRs) {}
-//}
+service KeyManagerFindService {
+  rpc find (FindPixRq) returns (FindPixRs) {}
+}
 
 enum PixKeyType {
   UNRECOGNIZABLE = 0;
@@ -59,3 +59,31 @@ message DeletePixRq {
 }
 
 message DeletePixRs { }
+
+message FindPixRq {
+  message FindByPixId {
+    string pixId = 1;
+    string clientId = 2;
+  }
+  oneof filter {
+    FindByPixId pixId = 1;
+    string pixKey = 2;
+  }
+}
+message FindPixRs {
+  message AccountRs {
+    string name = 1;
+    string agency = 2;
+    string number = 3;
+    AccountType type = 4;
+  }
+
+  optional string pixId = 1;
+  optional string clientId = 2;
+  string name = 3;
+  string cpf = 4;
+  string value = 5;
+  PixKeyType ketType = 6;
+  AccountRs account = 7;
+  google.protobuf.Timestamp createdAt = 8;
+}

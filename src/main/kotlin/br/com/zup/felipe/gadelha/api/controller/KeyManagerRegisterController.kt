@@ -4,7 +4,6 @@ import br.com.zup.felipe.gadelha.KeyManagerRegisterServiceGrpc
 import br.com.zup.felipe.gadelha.PixRq
 import br.com.zup.felipe.gadelha.PixRs
 import br.com.zup.felipe.gadelha.api.handler.notFoundHandler
-import br.com.zup.felipe.gadelha.domain.entity.Pix
 import br.com.zup.felipe.gadelha.domain.extension.convertPix
 import br.com.zup.felipe.gadelha.domain.repository.PixRepository
 import br.com.zup.felipe.gadelha.infra.client.BCBClient

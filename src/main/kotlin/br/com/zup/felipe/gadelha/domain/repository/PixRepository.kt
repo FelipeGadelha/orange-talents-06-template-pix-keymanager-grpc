@@ -11,4 +11,5 @@ interface PixRepository: JpaRepository<Pix, UUID> {
     fun existsByValueAndTypeKey(value: String, typeKey: TypeKey): Boolean
     fun existsByIdAndClientId(id: UUID, clientId: UUID): Boolean
     fun findByIdAndClientId(id: UUID, clientId: UUID): Optional<Pix>
+    fun findByValue(key: String): Optional<Pix>
 }

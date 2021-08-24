@@ -1,5 +1,6 @@
 package br.com.zup.felipe.gadelha.domain.entity
 
+import br.com.zup.felipe.gadelha.PixKeyType
 import br.com.zup.felipe.gadelha.api.validation.PixValue
 import org.hibernate.annotations.GenericGenerator
 import java.util.*
@@ -40,9 +41,9 @@ enum class TypeAccount(val itau: String) {
     CURRENT("CONTA_CORRENTE"),
     SAVING("CONTA_POUPANCA")
 }
-enum class TypeKey{
-    CPF,
-    PHONE,
-    EMAIL,
-    RANDOM;
+enum class TypeKey(val requestType: PixKeyType){
+    CPF(PixKeyType.CPF),
+    PHONE(PixKeyType.PHONE),
+    EMAIL(PixKeyType.EMAIL),
+    RANDOM(PixKeyType.RANDOM);
 }

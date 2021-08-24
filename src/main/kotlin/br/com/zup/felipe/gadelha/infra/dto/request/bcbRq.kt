@@ -36,7 +36,7 @@ data class BCBBankAccount(
         participant = account.institution.ispb,
         branch = account.agency,
         accountNumber = account.number,
-    accountType = if (account.type == "CONTA_CORRENTE") "CACC" else "SVGS"
+        accountType = if (account.type == "CONTA_CORRENTE") "CACC" else "SVGS"
     )
 }
 data class BCBOwner(
