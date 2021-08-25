@@ -39,7 +39,7 @@ class KeyManagerFindController(
                 .setName(response.owner.name)
                 .setCpf(response.owner.taxIdNumber)
                 .setValue(pix.value)
-                .setKetType(pix.typeKey.requestType)
+                .setKeyType(pix.typeKey.requestType)
                 .setAccount(FindPixRs.AccountRs.newBuilder()
                     .setName(Institution.name(response.bankAccount.participant))
                     .setType(AccountType.valueOf(response.bankAccount.accountType.type))

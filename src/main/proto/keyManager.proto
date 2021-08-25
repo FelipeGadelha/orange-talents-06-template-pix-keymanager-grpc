@@ -21,6 +21,10 @@ service KeyManagerFindService {
   rpc find (FindPixRq) returns (FindPixRs) {}
 }
 
+service KeyManagerFindAllService {
+  rpc findAll (FindAllPixRq) returns (FindAllPixRs) {}
+}
+
 enum PixKeyType {
   UNRECOGNIZABLE = 0;
   CPF = 1;
@@ -83,7 +87,21 @@ message FindPixRs {
   string name = 3;
   string cpf = 4;
   string value = 5;
-  PixKeyType ketType = 6;
+  PixKeyType keyType = 6;
   AccountRs account = 7;
   google.protobuf.Timestamp createdAt = 8;
+}
+
+message FindAllPixRq { string clientId = 1; }
+
+message FindAllPixRs {
+  message KeyRs {
+    string pixId = 1;
+    string clientId = 2;
+    PixKeyType keyType = 3;
+    string value = 4;
+    AccountType accountType = 5;
+    google.protobuf.Timestamp createdAt = 6;
+  }
+  repeated KeyRs pixKeys = 1;
 }

@@ -118,7 +118,7 @@ internal class KeyManagerRegisterControllerTest(
                 Arguments.of(CPF.toString(), "73281228119"),
                 Arguments.of(CPF.toString(), "82372374710"),
                 Arguments.of(CPF.toString(), "91611511496"),
-                Arguments.of(PHONE.toString(), "+5511${Random().nextInt(999999999).toString()}"),
+                Arguments.of(PHONE.toString(), "+5511${Random().nextInt(999999999)}"),
                 Arguments.of(EMAIL.toString(), faker.internet().emailAddress()),
                 Arguments.of(RANDOM.toString(), ""),
             )
