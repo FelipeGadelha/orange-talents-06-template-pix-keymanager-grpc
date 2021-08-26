@@ -4,7 +4,7 @@ import br.com.zup.felipe.gadelha.KeyManagerRegisterServiceGrpc
 import br.com.zup.felipe.gadelha.PixRq
 import br.com.zup.felipe.gadelha.PixRs
 import br.com.zup.felipe.gadelha.api.handler.notFoundHandler
-import br.com.zup.felipe.gadelha.domain.extension.convertPix
+import br.com.zup.felipe.gadelha.domain.extension.validate
 import br.com.zup.felipe.gadelha.domain.repository.PixRepository
 import br.com.zup.felipe.gadelha.infra.client.BCBClient
 import br.com.zup.felipe.gadelha.infra.client.ItauClient
@@ -13,6 +13,7 @@ import io.grpc.protobuf.StatusProto
 import io.grpc.stub.StreamObserver
 import io.netty.handler.codec.http.HttpResponseStatus.*
 import org.slf4j.LoggerFactory
+import java.time.LocalDateTime
 import javax.inject.Singleton
 import javax.transaction.Transactional
 import javax.validation.Validator
@@ -30,7 +31,7 @@ class KeyManagerRegisterController(
 //"error": "2 UNKNOWN: <Problem><type>UNPROCESSABLE_ENTITY</type><status>422</status><title>Unprocessable Entity</title><detail>The informed Pix key exists already</detail></Problem>"
     @Transactional
     override fun register(request: PixRq, responseObserver: StreamObserver<PixRs>) {
-        var pix = request.convertPix(validator, repository)
+        var pix = request.validate(validator, repository)
         val itauResponse = itauClient.findAccountClient(pix.clientId.toString(), pix.typeAccount.itau)
         if(itauResponse.status.code != OK.code()){
             responseObserver.onError(
@@ -46,7 +47,9 @@ class KeyManagerRegisterController(
             return
         }
         println(bcbResponse)
-        pix = bcbResponse.body.map { pix.copy(value = it.key) }.get()
+        pix = bcbResponse.body.map {
+            pix.copy(value = it.key, createdAt = LocalDateTime.parse(it.createdAt))
+        }.get()
         val saved = repository.save(pix).also {
             log.info("registrando chave pix: ${it.clientId}, ${it.value}, ${it.typeKey}, ${it.typeAccount}") }
         responseObserver.onNext(PixRs.newBuilder()

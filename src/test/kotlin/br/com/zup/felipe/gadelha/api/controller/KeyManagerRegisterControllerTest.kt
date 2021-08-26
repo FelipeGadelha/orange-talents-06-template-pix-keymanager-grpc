@@ -36,10 +36,10 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.util.*
 import java.util.stream.Stream
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @MicronautTest(transactional = false)
@@ -92,7 +92,7 @@ internal class KeyManagerRegisterControllerTest(
     private fun createPixRs(keyType: String, key: String) = BCBCreatePixKeyRs(
         keyType = keyType,
         key = key,
-        createdAt = OffsetDateTime.now().toString()
+        createdAt = LocalDateTime.now().toString()
     )
     private fun convertAccount(request: PixRq): String =
         if (request.accountType == AccountType.CURRENT) "CONTA_CORRENTE" else "CONTA_POUPANCA"
@@ -289,7 +289,8 @@ internal class KeyManagerRegisterControllerTest(
             value = "felipe@email.com",
             typeKey = TypeKey.EMAIL,
             typeAccount = TypeAccount.SAVING,
-            participant = "60701190"
+            participant = "60701190",
+            createdAt = LocalDateTime.now()
         )
         repository.save(pixTest)
         val request = PixRq.newBuilder()

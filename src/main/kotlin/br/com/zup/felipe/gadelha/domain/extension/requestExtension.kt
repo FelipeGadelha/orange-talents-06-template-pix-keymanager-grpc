@@ -17,7 +17,7 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
-fun PixRq.convertPix(validator: Validator, repository: PixRepository): Pix {
+fun PixRq.validate(validator: Validator, repository: PixRepository): Pix {
     val valid = object {
         @NotNull @IsUUID @Size(max = 36)
         val uuid: String = clientId
@@ -44,7 +44,7 @@ fun PixRq.convertPix(validator: Validator, repository: PixRepository): Pix {
     return pix
 }
 
-fun DeletePixRq.convertPix(validator: Validator, repository: PixRepository): Pix {
+fun DeletePixRq.validate(validator: Validator, repository: PixRepository): Pix {
 
     val valid = object {
         @NotNull @IsUUID @Size(max = 36)
@@ -60,7 +60,7 @@ fun DeletePixRq.convertPix(validator: Validator, repository: PixRepository): Pix
         .orElseThrow{ OperationNotAllowedException("Chave Pix não encontrado ou não pertence ao cliente") }
 }
 
-fun FindPixRq.convertPix(validator: Validator, repository: PixRepository): Pix =
+fun FindPixRq.validate(validator: Validator, repository: PixRepository): Pix =
     if (hasPixKey()) {
         val valid = object {
             @NotNull @NotBlank @Size(max = 77)
@@ -86,3 +86,12 @@ fun FindPixRq.convertPix(validator: Validator, repository: PixRepository): Pix =
             .orElseThrow{ EntityNotFountException("Chave Pix não encontrado") }
     }
 
+fun FindAllPixRq.validate(validator: Validator): UUID {
+    val valid = object {
+        @NotNull @IsUUID @Size(max = 36)
+        val client: String = clientId
+    }
+    val objectErrors = validator.validate(valid)
+    if (objectErrors.isNotEmpty()) return throw ConstraintViolationException(objectErrors)
+    return UUID.fromString(valid.client)
+}

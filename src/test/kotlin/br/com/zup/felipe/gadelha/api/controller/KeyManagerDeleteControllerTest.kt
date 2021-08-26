@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.util.*
 import javax.inject.Singleton
@@ -75,7 +76,8 @@ internal class KeyManagerDeleteControllerTest(
                 value = faker.internet().emailAddress().toString(),
                 typeKey = TypeKey.EMAIL,
                 typeAccount = TypeAccount.CURRENT,
-                participant = "60701190"
+                participant = "60701190",
+                createdAt = LocalDateTime.now()
             )
         )
     }

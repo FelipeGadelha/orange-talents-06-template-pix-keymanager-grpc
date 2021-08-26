@@ -3,7 +3,7 @@ package br.com.zup.felipe.gadelha.api.controller
 import br.com.zup.felipe.gadelha.DeletePixRq
 import br.com.zup.felipe.gadelha.DeletePixRs
 import br.com.zup.felipe.gadelha.KeyManagerDeleteServiceGrpc
-import br.com.zup.felipe.gadelha.domain.extension.convertPix
+import br.com.zup.felipe.gadelha.domain.extension.validate
 import br.com.zup.felipe.gadelha.domain.repository.PixRepository
 import br.com.zup.felipe.gadelha.infra.client.BCBClient
 import br.com.zup.felipe.gadelha.infra.dto.request.BCBDeletePixKeyRq
@@ -24,7 +24,7 @@ class KeyManagerDeleteController(
     private val log = LoggerFactory.getLogger(KeyManagerDeleteController::class.java)
 
     override fun delete(request: DeletePixRq, responseObserver: StreamObserver<DeletePixRs>) {
-        val pix = request.convertPix(validator, repository)
+        val pix = request.validate(validator, repository)
 
         val response = bcbClient.deletePix(key = pix.value, request = BCBDeletePixKeyRq(
                 key = pix.value,

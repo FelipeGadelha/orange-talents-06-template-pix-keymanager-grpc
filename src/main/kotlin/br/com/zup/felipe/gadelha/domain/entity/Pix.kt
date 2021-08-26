@@ -1,8 +1,10 @@
 package br.com.zup.felipe.gadelha.domain.entity
 
+import br.com.zup.felipe.gadelha.AccountType
 import br.com.zup.felipe.gadelha.PixKeyType
 import br.com.zup.felipe.gadelha.api.validation.PixValue
 import org.hibernate.annotations.GenericGenerator
+import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
@@ -24,7 +26,10 @@ data class Pix(
     val typeAccount: TypeAccount,
 
     @Column(nullable = false)
-    val participant: String?
+    val participant: String?,
+
+    @Column(nullable = false)
+    val createdAt: LocalDateTime?
 ) {
 
     @Id
@@ -32,14 +37,23 @@ data class Pix(
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     var id: UUID? = null
 
-
     constructor(clientId: UUID, value: String, typeKey: String, typeAccount: String)
-            : this(clientId, value, TypeKey.valueOf(typeKey), TypeAccount.valueOf(typeAccount), null)
+            : this(
+        clientId,
+        value,
+        TypeKey.valueOf(typeKey),
+        TypeAccount.valueOf(typeAccount),
+        null,
+        null
+    )
 }
 
-enum class TypeAccount(val itau: String) {
-    CURRENT("CONTA_CORRENTE"),
-    SAVING("CONTA_POUPANCA")
+enum class TypeAccount(
+    val itau: String,
+    val requestType: AccountType
+) {
+    CURRENT("CONTA_CORRENTE", AccountType.CURRENT),
+    SAVING("CONTA_POUPANCA", AccountType.SAVING)
 }
 enum class TypeKey(val requestType: PixKeyType){
     CPF(PixKeyType.CPF),

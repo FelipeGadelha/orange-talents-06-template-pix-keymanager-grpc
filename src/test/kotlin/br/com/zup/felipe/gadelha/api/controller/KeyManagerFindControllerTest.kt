@@ -2,7 +2,6 @@ package br.com.zup.felipe.gadelha.api.controller
 
 import br.com.zup.felipe.gadelha.FindPixRq
 import br.com.zup.felipe.gadelha.KeyManagerFindServiceGrpc
-import br.com.zup.felipe.gadelha.PixKeyType
 import br.com.zup.felipe.gadelha.domain.entity.Pix
 import br.com.zup.felipe.gadelha.domain.entity.TypeAccount
 import br.com.zup.felipe.gadelha.domain.entity.TypeKey
@@ -14,24 +13,25 @@ import br.com.zup.felipe.gadelha.infra.dto.response.BCBDetailsPixKeyRs
 import br.com.zup.felipe.gadelha.infra.dto.response.BankAccountRs
 import br.com.zup.felipe.gadelha.infra.dto.response.OnwerRs
 import com.github.javafaker.Faker
+import com.google.rpc.BadRequest
 import io.grpc.ManagedChannel
+import io.grpc.Status
+import io.grpc.StatusRuntimeException
+import io.grpc.protobuf.StatusProto
 import io.micronaut.context.annotation.Factory
 import io.micronaut.grpc.annotation.GrpcChannel
 import io.micronaut.grpc.server.GrpcServerChannel
 import io.micronaut.http.HttpResponse
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import org.hamcrest.MatcherAssert
-import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import java.time.LocalDateTime
 import java.util.*
-import java.util.stream.Stream
 import javax.inject.Singleton
 
 @MicronautTest(transactional = false)
@@ -72,7 +72,8 @@ internal class KeyManagerFindControllerTest(
                 value = faker.internet().emailAddress(),
                 typeKey = TypeKey.EMAIL,
                 typeAccount = TypeAccount.SAVING,
-                participant = "60701190"
+                participant = "60701190",
+                createdAt = LocalDateTime.now()
             )
         )
     }
@@ -104,19 +105,90 @@ internal class KeyManagerFindControllerTest(
             assertNotNull(this)
             assertTrue(this.clientId.isBlank())
             assertTrue(this.pixId.isBlank())
-            assertEquals(detailsRs.keyType, this.keyType)
+            assertEquals(detailsRs.keyType, this.keyType.name)
             assertEquals(detailsRs.key, this.value)
             assertEquals(Institution.name(detailsRs.bankAccount.participant), this.account.name)
             assertEquals(detailsRs.bankAccount.branch, this.account.agency)
             assertEquals(detailsRs.bankAccount.accountNumber, this.account.number)
-            assertEquals(detailsRs.bankAccount.accountType, this.account.type)
+            assertEquals(detailsRs.bankAccount.accountType.type, this.account.type.name)
             assertEquals(detailsRs.owner.name, this.name)
             assertEquals(detailsRs.owner.taxIdNumber, this.cpf)
-            assertEquals(detailsRs.createdAt.second, this.createdAt.seconds)
-            assertEquals(detailsRs.createdAt.nano, this.createdAt.nanos)
+//            assertEquals(detailsRs.createdAt, this.createdAt)
+//            assertEquals(detailsRs.createdAt.nano, this.createdAt.nanos)
         }
     }
 
+    @Test
+    internal fun `should return an exception when pix clientId is not present`() {
+        val request = FindPixRq.newBuilder()
+            .setPixId(FindPixRq.FindByPixId.newBuilder()
+                .setPixId(pix.id.toString())
+            ).build()
+        val exception = assertThrows<StatusRuntimeException> { grpcClient.find(request) }
+        with(exception){
+            assertEquals(Status.INVALID_ARGUMENT.code, status.code)
+            assertEquals("INVALID_ARGUMENT: Dados inválidos", this.message)
+            assertEquals(
+                listOf(Pair("client", "deve corresponder a \"[a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8}\$\"")),
+                StatusProto.fromThrowable(this).let { status ->
+                    val badRequest = status!!.detailsList[0].unpack(BadRequest::class.java)
+                    badRequest.fieldViolationsList.map { it.field to it.description }
+                }
+            )
+        }
+    }
+
+    @Test
+    internal fun `should return an exception when pix pixId is not present`() {
+        val request = FindPixRq.newBuilder()
+                .setPixId(FindPixRq.FindByPixId.newBuilder()
+                .setClientId(pix.clientId.toString())
+            ).build()
+        val exception = assertThrows<StatusRuntimeException> { grpcClient.find(request) }
+        with(exception){
+            assertEquals(Status.INVALID_ARGUMENT.code, status.code)
+            assertEquals("INVALID_ARGUMENT: Dados inválidos", this.message)
+            assertEquals(
+                listOf(Pair("id", "deve corresponder a \"[a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8}\$\"")),
+                StatusProto.fromThrowable(this).let { status ->
+                    val badRequest = status!!.detailsList[0].unpack(BadRequest::class.java)
+                    badRequest.fieldViolationsList.map { it.field to it.description }
+                }
+            )
+        }
+    }
+
+    @Test
+    internal fun `should return an exception when pix clientId and pixId is not present`() {
+        val request = FindPixRq.newBuilder()
+            .build()
+        val exception = assertThrows<StatusRuntimeException> { grpcClient.find(request) }
+        with(exception){
+            assertEquals(Status.INVALID_ARGUMENT.code, status.code)
+            assertEquals("INVALID_ARGUMENT: Dados inválidos", this.message)
+            assertEquals(
+                listOf(
+                    Pair("client", "deve corresponder a \"[a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8}\$\""),
+                    Pair("id", "deve corresponder a \"[a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8}\$\"")
+                ),
+                StatusProto.fromThrowable(this).let { status ->
+                    val badRequest = status!!.detailsList[0].unpack(BadRequest::class.java)
+                    badRequest.fieldViolationsList.map { it.field to it.description }
+                }
+            )
+        }
+    }
+    @Test
+    internal fun `should return an exception when pix pixKey not found`() {
+        val request = FindPixRq.newBuilder()
+            .setPixKey("teste@email.com")
+            .build()
+        val exception = assertThrows<StatusRuntimeException> { grpcClient.find(request) }
+        with(exception){
+            assertEquals(Status.NOT_FOUND.code, status.code)
+            assertEquals("NOT_FOUND: Chave Pix não encontrado", this.message)
+        }
+    }
     @Factory
     class FindClients {
         @Singleton

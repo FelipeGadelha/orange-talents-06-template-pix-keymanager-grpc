@@ -4,7 +4,7 @@ import br.com.zup.felipe.gadelha.AccountType
 import br.com.zup.felipe.gadelha.FindPixRq
 import br.com.zup.felipe.gadelha.FindPixRs
 import br.com.zup.felipe.gadelha.KeyManagerFindServiceGrpc
-import br.com.zup.felipe.gadelha.domain.extension.convertPix
+import br.com.zup.felipe.gadelha.domain.extension.validate
 import br.com.zup.felipe.gadelha.domain.repository.PixRepository
 import br.com.zup.felipe.gadelha.domain.util.Institution
 import br.com.zup.felipe.gadelha.infra.client.BCBClient
@@ -25,7 +25,7 @@ class KeyManagerFindController(
 
     @Transactional
     override fun find(request: FindPixRq, responseObserver: StreamObserver<FindPixRs>) {
-        val pix = request.convertPix(validator, repository)
+        val pix = request.validate(validator, repository)
         val httpResponse = bcbClient.findPix(pix.value)
         if (httpResponse.status.code != 200)
             throw HttpClientResponseException("teste", httpResponse)
